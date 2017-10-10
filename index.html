@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html>
   <head>
@@ -15,6 +16,10 @@
     </style>
   </head>
   <body>
+    <div id="myCube">
+      <button id="solveme">button</button>
+      <input id="theColor" value="green"\>
+    </div>
     <ul id="messages"></ul>
     <form action="">
       <input id="m" autocomplete="off" /><button>Send</button>
@@ -24,6 +29,18 @@
     <script>
       $(function () {
         var socket = io();
+
+        $("#solveme").on('click',function wasClicked(e){
+          console.log(e);
+          var myColor = $("#theColor").val();
+          socket.emit("solve", myColor);
+        })
+
+        socket.on("solve",function(newColor){
+          var myNewColor = newColor || "red";
+          $("body").css("background",myNewColor);
+        })
+
         $('form').submit(function(){
           socket.emit('chat message', $('#m').val());
           $('#m').val('');
